@@ -18,7 +18,8 @@ public:
         id = 0; name = ""; dept = ""; salary = 0.0;
     }
 
-    Teacher(int id, string name, string dept, double salary){
+    // Good practice to write const in parameter's and use address saves time copying here again for pass by value.
+    Teacher(const int id,const string &name,const string &dept,const double salary){
         this->id = id;
         this->name = name;
         this->dept = dept;
@@ -26,16 +27,16 @@ public:
     }
 
     // Setter
-    void setSalary(double salary){
+    void setSalary(const double salary){
         this->salary = salary;
     }
 
     // Getter
-    double getSalary(){
+    double getSalary() const{
         return salary;
     }
 
-    void getInfo(){
+    void getInfo () const {
         cout<<"#"<<id<<": "<<name<<" from "<<dept<<" dept, earns "<<"$"<<getSalary()<<"/yr!"<<endl;
     }
 
@@ -68,12 +69,8 @@ public:
     }
 
     // Shallow copy - is already handled by the default copy constructor!
-    Student(const Student &s): id(s.id){ //Deep Copy
-        this->age = s.age;
-        this->name = s.name;
-        this->size = s.size;
+    Student(const Student &s):id(s.id), age(s.age), name(s.name), size(s.size){ //Deep Copy
         this->setFees(s.getFees());
-
         // Allocate New Matrix
         matrix = new int*[size];
         for (int i = 0; i < size; ++i)
@@ -89,6 +86,10 @@ public:
             // self-assignment: s1 = s1;
             return *this;
         }
+
+        // If, logically, a Student’s id should also change on assignment, 
+        // then id probably shouldn’t be const, or you should delete operator=:
+        // Student& operator=(const Student&) = delete;
 
         // id is const, so we CANNOT assign to it.
         // You might want to assert that ids are equal if that's a logical requirement:
