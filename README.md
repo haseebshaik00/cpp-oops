@@ -65,3 +65,6 @@ Rundown of all CPP OOPs Concepts!
 13) Friend class and Friend Function: In C++, private and protected members of a class cannot normally be accessed from outside the class. But sometimes, you might want a specific external function or another class to access those private/protected members without making everything public. To do that, you use the keyword friend.
 Friend Function: A friend function is not a member of the class but has access to its private and protected data.
 Friend Class: If one class needs to access private/protected members of another class, make it a friend class.
+
+
+![alt text](image.png)

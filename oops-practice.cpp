@@ -36,11 +36,11 @@ public:
         return salary;
     }
 
-    void getInfo () const {
+    virtual void getInfo () const {
         cout<<"#"<<id<<": "<<name<<" from "<<dept<<" dept, earns "<<"$"<<getSalary()<<"/yr!"<<endl;
     }
 
-    ~Teacher(){}
+    virtual ~Teacher() = default; // if you don't want to write anything in the destructor keep it as default!
 };
 
 class Student{
@@ -52,6 +52,22 @@ public:
     string name;
     int **matrix;
     int size;
+
+    Student():id(0){ // No need to write this as constructor with 0 args is already handled with the below constructor!
+        this->age = 18;
+        this->name = "";
+        this->size = 3;
+        setFees(0);
+
+        // Allocate Matrix
+        matrix = new int*[size];
+        for (int i = 0; i < size; ++i)
+            matrix[i] = new int[size];
+        // Initialize Matrix
+        for (int i = 0; i < size; ++i)
+            for (int j = 0; j < size; ++j)
+                matrix[i][j] = i + j;
+    }
 
     // Constructor as Initialization List
     Student(int id=0, int age=18, string name="", double fees=0.0, int size=3): id(id), age(age), name(name), size(size){
@@ -128,8 +144,8 @@ public:
         return fees;
     }
 
-    void getInfo() const { // const functions: functions that don't change the data members values of the class
-        cout<<id<<" "<<name<<" "<<age<<" "<<getFees()<<" "<<"size="<<size<<endl;
+    virtual void getInfo() const { // const functions: functions that don't change the data members values of the class
+        cout<<"#"<<id<<": "<<name<<", Age: "<<age<<", pays="<<getFees()<<" & has matrix: "<<"size="<<size<<endl;
         cout<<"Matrix"<<endl;
         for(int i=0; i<size; ++i){
             for(int j=0; j<size; ++j)
@@ -138,14 +154,42 @@ public:
         }
     }
 
-    ~Student(){
+    virtual ~Student(){
         if(matrix){
             for(int i=0; i<size; ++i)
                 delete[] matrix[i];
             delete[] matrix;
         }
+        cout<<"#"<<id<<": "<<name<<", Age: "<<age<<", Matrix of size "<<size<<" is deleted!"<<endl;
     }
 };
+
+class GradStudent : public Student{
+public:
+    bool doingResearch;
+    GradStudent(int id=0, int age=18, string name="", double fees=0.0, bool doingResearch=true): 
+        Student(id, age, name, fees), doingResearch(doingResearch){}
+};
+
+class TA : public Student, protected Teacher{
+public:
+    TA(int id=0, int age=18, string name="", double fees=0.0, string dept="", 
+        double salary=0.0, bool doingResearch=true): 
+            Student(id, age, name, fees), Teacher(id, name, dept, salary){}
+    
+    void getInfo() const override{
+        cout << "===== TA Info =====\n";
+        cout << "[As Student] ";
+        Student::getInfo();   // call Student version
+        cout << "[As Teacher] ";
+        Teacher::getInfo();   // call Teacher version
+    }
+
+    ~TA(){
+        cout<<"Destructor from TA class says Hi!";
+    }
+};
+
 
 int main(){
     ios_base::sync_with_stdio(false);
@@ -171,6 +215,16 @@ int main(){
     Student s3(201, 23, "Haseeb", 5000, 4);
     s3 = s2;
     s3.getInfo();
+
+    GradStudent g1(301, 27, "MS-Harry", 18000, true);
+    g1.getInfo();
+
+    TA ta1(401, 26, "TA-John", 9000, "CSE", 60000.0, true);
+    ta1.getInfo(); // calls TA::getInfo() which prints both Student + Teacher info
+
+    Student *ta2 = new TA(402, 27, "TA-Niall", 7500, "MPAc", 75000.0, false); // this is actual runtime polymorphism
+    ta2->getInfo();
+    delete ta2;
 
     return 0;
 }
