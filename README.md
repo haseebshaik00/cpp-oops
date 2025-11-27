@@ -1,6 +1,8 @@
-# cpp-oops
+# System Design
 
-Rundown of all CPP OOPs Concepts!
+Rundown of all System Design Concepts!
+
+# CPP OOPS
 
 1) Object: Real world entities
 2) Class: collection of objects / blueprint of entities
