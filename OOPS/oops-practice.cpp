@@ -28,6 +28,7 @@ public:
     int id;
     string name;
     string dept;
+    friend class HR;
 
     // Teacher(){ 
     //     cout<<"Default Constructor overloaded!";
@@ -88,6 +89,8 @@ public:
     string name;
     int **matrix;
     int size;
+
+    friend void waiveFees(Student &s, double amount);
 
     Student():id(0){ // No need to write this as constructor with 0 args is already handled with the below constructor!
         this->age = 18;
@@ -228,7 +231,7 @@ public:
 
 void demoStaticVar(){
     static int count = 0;
-    cout<<"Static variable - count, called "<<++count<<" times!"<<endl;
+    cout<<"[Static variable] count, called "<<++count<<" times!"<<endl;
 }
 
 void demoStaticObj(){
@@ -238,16 +241,32 @@ void demoStaticObj(){
     classRep.getInfo();
 }
 
+void waiveFees(Student &s, double amount){
+    cout<<"[Friend Func] Waiving $"<<amount<<" for "<<s.name<<endl;
+    s.fees -= amount;
+}
+
+class HR{
+public:
+    void raise(Teacher &t, int percentage){
+        cout<<"[HR] Teacher "<<t.name<<" old salary ="<<t.salary<<endl; 
+        t.salary = t.salary* ((100 + percentage)*1.0)/100;
+        cout<<"[HR] Teacher "<<t.name<<" new salary ="<<t.salary<<endl; 
+    }
+};
+
 int main(){
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
+    // Teacher Class
     Teacher t1(0001, "Steve", "CSE", 100000.00);
     Teacher t2(0002, "Jacob", "MAE", 250000.00);
     t2.setSalary(200000);
     t1.getInfo();
     t2.getInfo();
 
+    // Student Class
     Student s1(101, 25, "Harry", 10000);
     s1.getInfo();
     Student s2(s1); // Deep copy constructor
@@ -257,36 +276,49 @@ int main(){
     s2.matrix[0][0]=1;
     s1.getInfo();
     s2.getInfo();
-
     // with diff id and size! - be careful sending parameters to initialization list!
     Student s3(201, 23, "Haseeb", 5000, 4);
     s3 = s2;
     s3.getInfo();
 
+    // Grad Student Class
     GradStudent g1(301, 27, "MS-Harry", 18000, true);
     g1.getInfo();
 
+    // TA Class
     TA ta1(401, 26, "TA-John", 9000, "CSE", 60000.0, true);
     ta1.getInfo(); // calls TA::getInfo() which prints both Student + Teacher info
 
+    // Runtime Polymorphism: Student *ta2 = new TA();
     Student *ta2 = new TA(402, 27, "TA-Niall", 7500, "MPAc", 75000.0, false); // this is actual runtime polymorphism
     ta2->getInfo();
     delete ta2;
 
+    // Runtime Polymorphism: IPerson *ta2 = new TA();
     IPerson *ta3 = new TA(402, 27, "TA-Niall", 7500, "MPAc", 75000.0, false); // this is actual runtime polymorphism
-    // ta3 fails because of the diamond multiple inheritance issue described above!
-    // solution - use virtual inhertance!
+    // ta3 fails because of the diamond multiple inheritance issue described above!: solution - use virtual inhertance!
     ta3->getInfo();
     delete ta3;
 
-    // Static Variable Function Check
+    // Static Variable in Function Check
     demoStaticVar();
     demoStaticVar();
     demoStaticVar();
 
+    // Static Variable in Class Check
+    cout<<"Teachers count from main = "<<Teacher::getTeacherCount()<<endl;
+
+    // Static Object Check
     demoStaticObj();
 
-    cout<<"Teachers count from main = "<<Teacher::getTeacherCount()<<endl;
+    // Friend Function Check
+    s2.getInfo();
+    waiveFees(s2, 100);
+    s2.getInfo();
+
+    // Friend Class Check
+    HR h;
+    h.raise(t1, 50);
 
     return 0;
 }
