@@ -7,7 +7,7 @@ Rundown of all System Design Concepts!
 1) Object: Real world entities
 2) Class: collection of objects / blueprint of entities
 
-## Class
+### Class
 
 - **Contains:** Constructors, Destructor, access specifiers/modifiers, data members/attributes/fields/propeties, member functions/methods, getters, setters
 
@@ -70,7 +70,8 @@ Friend Class: If one class needs to access private/protected members of another 
 
 
 ## Notes!
-[1] ![alt text](image.png)
+[1] Runtime Polymorphism Guide
+![alt text](./public/image.png)
 [2] When to use virtual and override?
 In base interface (IPerson): use virtual!
 In first concrete derived (Teacher, Student): use override, no need for virtual.
