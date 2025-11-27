@@ -2,7 +2,7 @@
 
 Rundown of all System Design Concepts!
 
-# CPP OOPS
+## CPP OOPS
 
 1) Object: Real world entities
 2) Class: collection of objects / blueprint of entities
