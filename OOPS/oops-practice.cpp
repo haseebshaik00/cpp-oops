@@ -23,6 +23,7 @@ IPerson::~IPerson() {}           // must still define it (body can be empty)
 class Teacher: virtual public IPerson{
 protected:
     double salary;
+    static int teacherCount; // static variable inside class - shared across all Teachers (and TAs)
 public:
     int id;
     string name;
@@ -34,6 +35,7 @@ public:
 
     Teacher(){ // Non-parameterized Constructor
         id = 0; name = ""; dept = ""; salary = 0.0;
+        ++teacherCount;
     }
 
     // Good practice to write const in parameter's and use address saves time copying here again for pass by value.
@@ -42,6 +44,7 @@ public:
         this->name = name;
         this->dept = dept;
         setSalary(salary);
+        ++teacherCount;
     }
 
     // Setter
@@ -58,13 +61,23 @@ public:
         return salary;
     }
 
+    static int getTeacherCount(){ // NEW: can be called as Teacher::getTeacherCount()
+        return teacherCount;
+    }
+
     // virtual void getInfo () const override { - writing virtual here is redundant! as already written in interface.
     void getInfo () const override {
         cout<<"#"<<id<<": "<<name<<" from "<<dept<<" dept, earns "<<"$"<<getSalary()<<"/yr!"<<endl;
+        cout<<"Total Teachers = "<<teacherCount<<endl;
     }
 
-    ~Teacher() override = default; // if you don't want to write anything in the destructor keep it as default!
+    // ~Teacher() override = default; // if you don't want to write anything in the destructor keep it as default!
+    ~Teacher() override {
+        --teacherCount;
+    }
 };
+
+int Teacher::teacherCount = 0; // IMPORTANT TO DEFINE STATIC VARIABLE IN CLASS!
 
 class Student: virtual public IPerson{
 private:
@@ -213,6 +226,10 @@ public:
     }
 };
 
+void demoStaticVar(){
+    static int count = 0;
+    cout<<"Static variable - count, called "<<++count<<" times!"<<endl;
+}
 
 int main(){
     ios_base::sync_with_stdio(false);
@@ -254,6 +271,13 @@ int main(){
     // solution - use virtual inhertance!
     ta3->getInfo();
     delete ta3;
+
+    // Static Variable Function Check
+    demoStaticVar();
+    demoStaticVar();
+    demoStaticVar();
+
+    cout<<"Teachers count from main = "<<Teacher::getTeacherCount()<<endl;
 
     return 0;
 }
