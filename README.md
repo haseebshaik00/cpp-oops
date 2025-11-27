@@ -75,4 +75,3 @@ Friend Class: If one class needs to access private/protected members of another 
 In base interface (IPerson): use virtual!
 In first concrete derived (Teacher, Student): use override, no need for virtual.
 In further derived (TA, GradStudent): also just use override.
-[3] 
