@@ -4,26 +4,20 @@ using namespace std;
 
 class IPerson{
 public:
-    virtual void getInfo() const = 0;
+    virtual void getInfo() const = 0; // only the presence still makes class abstract
     virtual ~IPerson() = 0; // it's pure now so should be implemented below
-    // virtual ~IPerson() = default; - still virtual, but not pure
+    // virtual ~IPerson() = default; - virtual, but NOT pure = whole class - mix of pure and impure virtual func!
 };
 
-IPerson::~IPerson() {}           // must still define it (body can be empty)
-
-// Alternate implementation with a mix of pure and impure virtual func!
-// class IPerson {
-// public:
-//     virtual void getInfo() const = 0;  // still makes class abstract
-//     virtual ~IPerson() = default;      // virtual, but NOT pure
-// };
-
+IPerson::~IPerson() {}  // must still define it (body can be empty)
+// can also be written as IPerson::~IPerson() = default;
 
 // virtually inheriting IPerson to avoid diamond inheritance problem!
 class Teacher: virtual public IPerson{
 protected:
     double salary;
-    static int teacherCount; // static variable inside class - shared across all Teachers (and TAs)
+    static int teacherCount; // static variable inside class - shared across all Teachers (and TAs) - should declare outside
+    // inline static int teacherCount = 0;  // definition + initialization right here allowed in C++ 17
 public:
     int id;
     string name;
